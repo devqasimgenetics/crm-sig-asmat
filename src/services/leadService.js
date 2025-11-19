@@ -549,7 +549,7 @@ export const deleteBranch = async (userId) => {
   }
 };
 
-export const getAllSalesManagerLeads = async (page = 1, limit = 10) => {
+export const getAllSalesManagerLeads = async (page = 1, limit = 10, fromDate = '', toDate = '') => {
   try {
     const authToken = getRefreshToken();
     
@@ -568,7 +568,7 @@ export const getAllSalesManagerLeads = async (page = 1, limit = 10) => {
     : null;
 
     // ✅ Decide which URL to hit based on role
-    const refreshUrl = `${API_BASE_URL}/lead/sales/en?paramPage=${page}&paramLimit=${limit}`
+    const refreshUrl = `${API_BASE_URL}/lead/sales/en?paramPage=${page}&paramLimit=${limit}&fromDate=${fromDate}&toDate=${toDate}`
 
     const response = await axios.get(
       refreshUrl,
