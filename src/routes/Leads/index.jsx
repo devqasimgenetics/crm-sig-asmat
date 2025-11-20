@@ -151,7 +151,7 @@ const LeadManagement = () => {
         console.error('Failed to fetch leads:', result.message);
         if (result.requiresAuth) {
           // Handle authentication error - redirect to login
-          alert('Session expired. Please login again.');
+          toast.error('Session expired. Please login again');
           // You can add navigation logic here if needed
         } else {
           // alert(result.message || 'Failed to fetch leads');
@@ -159,7 +159,7 @@ const LeadManagement = () => {
       }
     } catch (error) {
       console.error('Error fetching leads:', error);
-      alert('Failed to fetch leads. Please try again.');
+      toast.error('Failed to fetch leads. Please try again');
     } finally {
       setLoading(false);
     }
@@ -233,22 +233,23 @@ const LeadManagement = () => {
         const result = await createLead(leadData);
 
         if (result.success) {
-          alert(result.message || 'Lead created successfully!');
+          toast.success(result.message || 'Lead created successfully!');
+
           resetForm();
           setDrawerOpen(false);
           // Refresh the lead list
           fetchLeads(currentPage, itemsPerPage);
         } else {
           if (result.requiresAuth) {
-            alert('Session expired. Please login again.');
+            toast.error('Session expired. Please login again!');
             // You can add navigation logic here if needed
           } else {
-            alert(result.message || 'Failed to create lead');
+            toast.error(result.message || 'Failed to create lead');
           }
         }
       } catch (error) {
         console.error('Error creating lead:', error);
-        alert('Failed to create lead. Please try again.');
+        toast.error('Failed to create lead. Please try again');
       } finally {
         setSubmitting(false);
       }
@@ -550,15 +551,15 @@ const LeadManagement = () => {
         fetchLeads(currentPage, itemsPerPage);
       } else {
         if (result.requiresAuth) {
-          alert('Session expired. Please login again.');
+          toast.error('Session expired. Please login again');
           // You can add navigation logic here if needed
         } else {
-          alert(result.message || 'Failed to update lead status');
+          toast.error(result.message || 'Failed to update lead status');
         }
       }
     } catch (error) {
       console.error('Error updating lead status:', error);
-      alert('Failed to update lead status. Please try again.');
+      toast.error('Failed to update lead status. Please try again');
     }
   };
 

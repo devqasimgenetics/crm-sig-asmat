@@ -5,6 +5,7 @@ import { Search, Plus, Edit, Trash2, ChevronDown, ChevronLeft, ChevronRight, X, 
 import { getAllLeads, createLead, updateLead, deleteLead } from '../../services/leadService';
 import { Calendar } from 'lucide-react'
 import DateRangePicker from '../../components/DateRangePicker';
+import toast from 'react-hot-toast';
 
 // Validation Schema
 const leadValidationSchema = Yup.object({
@@ -119,7 +120,7 @@ const LeadManagement = () => {
         console.error('Failed to fetch leads:', result.message);
         if (result.requiresAuth) {
           // Handle authentication error - redirect to login
-          alert('Session expired. Please login again.');
+          toast.error('Session expired. Please login again');
           // You can add navigation logic here if needed
         } else {
           // alert(result.message || 'Failed to fetch leads');
@@ -127,7 +128,7 @@ const LeadManagement = () => {
       }
     } catch (error) {
       console.error('Error fetching leads:', error);
-      alert('Failed to fetch leads. Please try again.');
+      toast.error('Failed to fetch leads. Please try again');
     } finally {
       setLoading(false);
     }
@@ -182,7 +183,7 @@ const LeadManagement = () => {
         }
 
         if (result.success) {
-          alert(result.message || `Lead ${editingLead ? 'updated' : 'created'} successfully!`);
+          toast.success(result.message || `Lead ${editingLead ? 'updated' : 'created'} successfully!`);
           resetForm();
           setDrawerOpen(false);
           setEditingLead(null);
@@ -190,15 +191,15 @@ const LeadManagement = () => {
           fetchLeads(currentPage, itemsPerPage);
         } else {
           if (result.requiresAuth) {
-            alert('Session expired. Please login again.');
+            toast.error('Session expired. Please login again');
             // You can add navigation logic here if needed
           } else {
-            alert(result.message || `Failed to ${editingLead ? 'update' : 'create'} lead`);
+            toast.error(result.message || `Failed to ${editingLead ? 'update' : 'create'} lead`);
           }
         }
       } catch (error) {
         console.error('Error submitting lead:', error);
-        alert(`Failed to ${editingLead ? 'update' : 'create'} lead. Please try again.`);
+        toast.error(`Failed to ${editingLead ? 'update' : 'create'} lead. Please try again.`);
       } finally {
         setSubmitting(false);
       }
@@ -293,19 +294,19 @@ const LeadManagement = () => {
         const result = await deleteLead(leadId);
         
         if (result.success) {
-          alert(result.message || 'Lead deleted successfully!');
+          toast.success(result.message || 'Lead deleted successfully!');
           // Refresh the lead list
           fetchLeads(currentPage, itemsPerPage);
         } else {
           if (result.requiresAuth) {
-            alert('Session expired. Please login again.');
+            toast.error('Session expired. Please login again');
           } else {
-            alert(result.message || 'Failed to delete lead');
+            toast.error(result.message || 'Failed to delete lead');
           }
         }
       } catch (error) {
         console.error('Error deleting lead:', error);
-        alert('Failed to delete lead. Please try again.');
+        toast.error('Failed to delete lead. Please try again');
       }
       setShowActionsDropdown(null);
     }

@@ -9,6 +9,7 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 import DateRangePicker from '../../components/DateRangePicker';
+import toast from 'react-hot-toast';
 
 // Validation Schema
 const leadValidationSchema = Yup.object({
@@ -173,14 +174,14 @@ const LeadManagement = () => {
       } else {
         console.error('Failed to fetch leads:', result.message);
         if (result.requiresAuth) {
-          alert('Session expired. Please login again.');
+          toast.error('Session expired. Please login again');
         } else {
-          alert(result.message || 'Failed to fetch leads');
+          toast.error(result.message || 'Failed to fetch leads');
         }
       }
     } catch (error) {
       console.error('Error fetching leads:', error);
-      alert('Failed to fetch leads. Please try again.');
+      toast.error('Failed to fetch leads. Please try again');
     } finally {
       setLoading(false);
     }
@@ -265,22 +266,22 @@ const LeadManagement = () => {
         const result = await createLead(leadData);
 
         if (result.success) {
-          alert(result.message || 'Lead created successfully!');
+          toast.success(result.message || 'Lead created successfully!');
           resetForm();
           setDrawerOpen(false);
           // Refresh the lead list
           fetchLeads(currentPage, itemsPerPage);
         } else {
           if (result.requiresAuth) {
-            alert('Session expired. Please login again.');
+            toast.error('Session expired. Please login again');
             // You can add navigation logic here if needed
           } else {
-            alert(result.message || 'Failed to create lead');
+            toast.error(result.message || 'Failed to create lead');
           }
         }
       } catch (error) {
         console.error('Error creating lead:', error);
-        alert('Failed to create lead. Please try again.');
+        toast.error('Failed to create lead. Please try again');
       } finally {
         setSubmitting(false);
       }
@@ -451,7 +452,7 @@ const filteredLeads = leads.filter(lead => {
 
   const handleAssignAgent = async () => {
     if (!selectedAgentForLead) {
-      alert('Please select an agent');
+      toast.error('Please select an agent');
       return;
     }
     
@@ -463,7 +464,7 @@ const filteredLeads = leads.filter(lead => {
       const result = await assignLeadToAgent(selectedLead.id, selectedAgentForLead);
       
       if (result.success) {
-        alert(result.message || 'Lead assigned to agent successfully!');
+        toast.success(result.message || 'Lead assigned to agent successfully!');
         setShowRowModal(false);
         setSelectedLead(null);
         setSelectedAgentForLead('');
@@ -471,14 +472,14 @@ const filteredLeads = leads.filter(lead => {
         await fetchLeads(currentPage, itemsPerPage);
       } else {
         if (result.requiresAuth) {
-          alert('Session expired. Please login again.');
+          toast.error('Session expired. Please login again');
         } else {
-          alert(result.message || 'Failed to assign lead to agent');
+          toast.error(result.message || 'Failed to assign lead to agent');
         }
       }
     } catch (error) {
       console.error('Error assigning lead:', error);
-      alert('Failed to assign lead. Please try again.');
+      toast.error('Failed to assign lead. Please try again');
     } finally {
       setAssigningLead(false);
     }

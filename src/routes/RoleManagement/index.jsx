@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { Search, Plus, Edit, Trash2, ChevronDown, ChevronLeft, ChevronRight, Shield, X, CheckCircle } from 'lucide-react';
 import { getAllRoles, createRole } from '../../services/roleService';
 import DateRangePicker from '../../components/DateRangePicker';
+import toast from 'react-hot-toast';
 
 // Validation Schema
 const roleValidationSchema = Yup.object({
@@ -77,14 +78,14 @@ const RoleManagement = () => {
       } else {
         console.error('Failed to fetch roles:', result.message);
         if (result.requiresAuth) {
-          alert('Session expired. Please login again.');
+          toast.error('Session expired. Please login again');
         } else {
-          alert(result.message || 'Failed to fetch roles');
+          toast.error(result.message || 'Failed to fetch roles');
         }
       }
     } catch (error) {
       console.error('Error fetching roles:', error);
-      alert('Failed to fetch roles. Please try again.');
+      toast.error('Failed to fetch roles. Please try again');
     } finally {
       setLoading(false);
     }
@@ -252,21 +253,21 @@ const RoleManagement = () => {
         const result = await createRole(roleData);
 
         if (result.success) {
-          alert(result.message || 'Role created successfully!');
+          toast.success(result.message || 'Role created successfully!');
           resetForm();
           handleCloseDrawer();
           // Refresh the role list
           fetchRoles(currentPage, itemsPerPage);
         } else {
           if (result.requiresAuth) {
-            alert('Session expired. Please login again.');
+            toast.error('Session expired. Please login again');
           } else {
-            alert(result.message || 'Failed to create role');
+            toast.error(result.message || 'Failed to create role');
           }
         }
       } catch (error) {
         console.error('Error creating role:', error);
-        alert('Failed to create role. Please try again.');
+        toast.error('Failed to create role. Please try again');
       } finally {
         setSubmitting(false);
       }
